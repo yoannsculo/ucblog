@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#define CMD_NAME "makemyblog"
+#define CMD_NAME "ucblog"
 
 static void usage()
 {

@@ -13,7 +13,7 @@ INCLUDES = -Iinclude \
 CFLAGS = -W -Wall -g
 LDFLAGS = -L/usr/lib -L$(BUILD_PATH) -lsundown
 
-all: tmpl $(EXEC)
+all: $(EXEC)
 
 $(BUILD_PATH)/%.o: src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<

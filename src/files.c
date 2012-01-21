@@ -43,6 +43,7 @@ int is_file(const char *filename)
 	}
 }
 
+/* like "pwd" but with a pilename as input */
 int get_current_dir(char *filename, char *current_dir)
 {
 	char *pstr = NULL;
@@ -149,11 +150,15 @@ static int get_extension(char *extension, char *string)
 	return 0;
 }
 
+/* get current filename without absolute path */
 int get_short_filename(char *filename, char *short_filename)
 {
 	char *pchr = NULL;
 
 	if (filename == NULL || short_filename == NULL)
+		return -1;
+
+	if (strlen(filename) == 0)
 		return -1;
 
 	pchr = strrchr(filename, '/');

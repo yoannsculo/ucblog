@@ -1,3 +1,4 @@
+#include "redirection.h"
 
 // void create_redirections_from_file(char *filename)
 // {
@@ -21,7 +22,7 @@ int generate_redirection(struct s_redirection *redirection)
 	return 0;
 }
 
-int load_redirections_file(char *filename, )
+int load_redirections_file(char *filename)
 {
-
-};
+	return 0;
+}

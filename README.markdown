@@ -1,6 +1,6 @@
-ucblog
+µcblog
 ================================
-ucblog is a c based static website generator.
+µcblog is a c based static website generator.
 
 Using :
 

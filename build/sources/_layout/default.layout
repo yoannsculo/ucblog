@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+	<link href="<tmpl_var name="site_url">/css/bootstrap-1.1.1.css" rel="stylesheet">
+	<link href="<tmpl_var name="site_url">/assets/css/docs.css" rel="stylesheet">
+	<link href="<tmpl_var name="site_url">/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+
+	<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+	<script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>
+	<script src="<tmpl_var name="site_url">/assets/js/google-code-prettify/prettify.js"></script>
+	<script src="<tmpl_var name="site_url">/assets/js/application.js"></script>
+	
+	<title><tmpl_var name="site_title"></title>
+</head>
+
+<body>
+
+	<div class="topbar">
+		<div class="fill">
+			<div class="container">
+				<h3><a href="<tmpl_var name="site_url">"><tmpl_var name="site_title"></a></h3>
+				<ul>
+					<li class="active"><a href="index.html">About me</a></li>
+					<li><a href="documents.html">Docs</a></li>
+					<li><a href="projects.html">Projects</a></li>
+					<li><a href="embedded-linux-cv.html">Resume</a></li>
+					<li><a href="contact.html">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<p>Site de <tmpl_var name="site_author"></p>
+		<p>----------------------------</p>
+	</div>
+
+	<tmpl_var name="content">
+</body>
+</html>

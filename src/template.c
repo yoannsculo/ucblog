@@ -10,6 +10,8 @@
 #include "files.h"
 #include "config.h"
 
+#include "page.h"
+
 //  enum
 //    {
 //      TOTAL_KEYWORDS = 23,
@@ -87,7 +89,8 @@ static int free_buffer(char **buffer)
 }
 
 
-void load_variables_from_cfg(TMPL_varlist *tmpl_list, struct s_var_entry *var)
+// void load_variables_from_cfg(TMPL_varlist *tmpl_list, struct s_var_entry *var)
+void load_variables_from_cfg(struct s_var_entry *var)
 {
 	int i = 0;
 
@@ -108,7 +111,7 @@ static int fill_with_content(char *content, char *layout, char *result)
 		return -1;
 	}
 
-	load_variables_from_cfg(mainlist, config_site.var);	
+	load_variables_from_cfg(config_site.var);
 	//template_add_pages(mainlist, "blog");
 
 	mainlist = TMPL_add_var(mainlist, "content", content, 0);
@@ -122,23 +125,33 @@ static int fill_with_content(char *content, char *layout, char *result)
 }
 
 // apply template on a file
-int apply_template(char *template, char *filename)
+int apply_template(struct s_page *page)
 {
 	char *buffer = NULL;
 	char temp_file[255]; // TODO : utiliser 2 temp_files
 	char current_dir[255];
-	char short_filename[255];
+	// char short_filename[255];
+	char *template;
+
+	char filename[PATH_MAX+1];
 
 	long size;
 	
-	if (!is_file(filename)) {
-		printf("%s is not a file\n", filename);
-		return -1;
-	}
+	template = page->category->name;
 
-	get_short_filename(filename, short_filename);
-	if (strcmp(short_filename, "content.html"))
-		return 1;
+	// if (!is_file(filename)) {
+	// 	printf("%s is not a file\n", filename);
+	// 	return -1;
+	// }
+
+	// get_short_filename(filename, short_filename);
+	// if (strcmp(short_filename, "content.html"))
+	// 	return 1;
+
+	sprintf(filename, "%s/%s/content.html", config_site.dest_directory, page->permalink);
+	printf("on charge %s\n", filename);
+	if (!is_file(filename))
+		return -1;
 
 	size = load_file_content(filename, &buffer);
 	if (size == 0) {
@@ -152,7 +165,7 @@ int apply_template(char *template, char *filename)
 
 	fill_with_content(buffer, template, temp_file);
 	free_buffer(&buffer);
-	
+
 	size = load_file_content(temp_file, &buffer);
 	if (size == 0) {
 		return -1;

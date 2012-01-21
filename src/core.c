@@ -11,45 +11,20 @@
 
 #include "config.h"
 
-// static char source_directory[PATH_MAX];
-// static char dest_directory[PATH_MAX];
+#include "category.h"
 
 extern struct s_config_site config_site;
 
-// TODO : maybe use input / output parameters here ?
-static int generate_mkd_to_html(char *mkd_filename)
-{
-	char input[PATH_MAX];
-	char output[PATH_MAX];
-	char input_dir[PATH_MAX];
-	
-	if (get_current_dir(mkd_filename, input_dir) != 0)
-		return -1;
-
-	// if (!strcmp(input_dir, "blog") || !strcmp(input_dir, "pages")) {
-	// 	// We avoid depth 0 directories
-	// 	return -1;
-	// }	    
-
-	sprintf(input,  "%s/%s", config_site.source_directory, mkd_filename);
-	sprintf(output, "%s/%s/content.html", config_site.dest_directory, input_dir);
-
-	// printf("convert mdk %s -> to html %s\n", input, output);
-
-	// TODO : éviter taille zero
-
-	return convert_mkd_to_html(input, output);
-}
-
 // Relative path
-static int process_mkd(char *filename)
+static int process_mkd(char *filename, struct s_category *category)
 {
-	if (generate_mkd_to_html(filename) != 0)
+	struct s_page *page;
+	
+	page = add_page(filename, category);
+	if (page == NULL)
 		return -1;
-	
-	printf("Processing MKD file : %s\n", filename);
-	
-	return 0;
+	else
+		return 0;
 }
 
 // Relative path
@@ -75,11 +50,11 @@ static int process_image(char *filename)
 }
 
 // Relative path
-static int process_file(char *filename)
+static int process_file(char *filename, struct s_category *category)
 {
 	//printf("Processing filename : %s\n", filename);
 	if (is_markdown_file(filename))
-		return process_mkd(filename);
+		return process_mkd(filename, category);
 
 	if (is_image_file(filename))
 		return process_image(filename);
@@ -100,66 +75,8 @@ static int process_file(char *filename)
 	return -1;
 }
 
-// TODO : rename into search_for_html
-// static int apply_template(char *template, char *path)
-static int parse_folder(char *template, char *path)
-{
-	DIR *dir;
-	struct dirent entry;
-	struct dirent *result;
-	struct stat entryInfo;
-
-	char path_name[PATH_MAX + 1];
-	char absolute_path[PATH_MAX + 1];
-	
-	sprintf(absolute_path, "%s/%s", config_site.dest_directory, path);
-	
-	if ((dir = opendir(absolute_path)) == NULL) {
-		printf("Couldn't open %s : %s\n", absolute_path, strerror(errno));
-		return -1;
-	}
-	
-	// printf("looking into %s\n", absolute_path);
-
-	while ((readdir_r(dir, &entry, &result) == 0) && result != 0) {
-		if (strcmp(entry.d_name, ".")  == 0 ||
-		    strcmp(entry.d_name, "..") == 0) {
-			continue;
-		}
-	
-		strncpy(path_name, path, PATH_MAX);
-		strncat(path_name, "/", PATH_MAX);
-		strncat(path_name, entry.d_name, PATH_MAX);
-		
-		sprintf(absolute_path, "%s/%s", config_site.dest_directory, path_name);	
-		
-		if (lstat(absolute_path, &entryInfo) == 0) {
-			if (S_ISDIR (entryInfo.st_mode)) {
-				//printf("%s is a dir\n", path_name);			
-				parse_folder(template, path_name);
-			} else {
-				char short_filename[255];
-				get_short_filename(path_name, short_filename);
-				// printf("template : %s - file : %s - %s\n", template, short_filename, absolute_path);
-				
-				if (is_html_file(path_name)) {
-					apply_template(template, absolute_path);
-					// printf("%sProcessing HTML file : %s\n", ( res >= 0 ? "" : "FAILED " ), path_name);
-				}
-			}
-		}
-
-
-		// sprintf(absolute_path, "%s/%s", source_directory, path_name);	
-	}
-
-	closedir(dir);
-
-	return 0;
-}
-
 // relative path
-static int process_dir(char *path)
+int process_dir(char *path, struct s_category *category)
 {
 	DIR *dir;
 	struct dirent entry;
@@ -191,11 +108,11 @@ static int process_dir(char *path)
 
 		if (lstat(absolute_path, &entryInfo) == 0) {
 			if (S_ISDIR (entryInfo.st_mode)) {
-				sprintf(new_dir, "%s/%s", config_site.dest_directory, path_name);
+				sprintf(new_dir, "%s/%s", config_site.dest_directory, path_name+1); // +1 is to delete _
 				create_dir(new_dir);
-				process_dir(path_name);
+				process_dir(path_name, category);
 			} else {
-				process_file(path_name);
+				process_file(path_name, category);
 			}
 		}	
 	}
@@ -205,22 +122,25 @@ static int process_dir(char *path)
 	return 0;
 }
 
-/* TODO : rename into category */
 // relative path (_blog, _pages, ...)
 static int process_dynamic_dir(char *dirname)
 {
-	if (dirname == NULL)
+	char dir[PATH_MAX];
+
+	if (dirname == NULL) {
+		printf("Empty dirname\n");
 		return -1;
+	}
 
-	// mkd -> html content (just raw data)
-	process_dir(dirname);
+	if (!is_dynamic_element(dirname)) {
+		printf("Bad category\n");
+		return -1;
+	}
 
-	// include html content into dynamic html pages
-	parse_folder("blog", dirname); // TODO : change blog template to dynamic
-	
-	// TODO : add dir cleanup function (delete blog.html)
-
-	return 0;
+	if (is_protected_directory(dirname))
+		return 0;
+	else
+		return process_category(dirname);
 }
 
 // Relative path
@@ -245,7 +165,7 @@ static int process_regular_file(char *filename)
 // Relative path
 static int process_dynamic_file(char *filename)
 {
-	// TODO
+	// TODO : usefull ?
 	return 1;
 }
 
@@ -260,7 +180,23 @@ int is_dynamic_element(char *name)
 		return 0;
 }
 
-static int process_root_dir()
+int is_protected_directory(char *dirname)
+{
+	if (strcmp(dirname, "_layout") == 0)
+		return 1;
+	else
+		return 0;
+}
+
+
+
+
+
+/* First step
+ * - find and process each directory with the prefix "_"
+ * - find and move regular files and directories
+ */
+static int process_tree()
 {
 	DIR *dir;
 	struct dirent entry;
@@ -318,7 +254,10 @@ int process_site()
 	if (res != 0)
 		return -1;
 
-	res = process_root_dir();
+	res = process_tree();
+	res = generate_pages();
+	// res = generate_redirections();
+	// res = generate_sitemap();
 
 	return res;
 }

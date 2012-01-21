@@ -1,9 +1,51 @@
+#include <stdio.h>
+#include <limits.h>
 
+#include "category.h"
+#include "string.h"
+#include "files.h"
+#include "config.h"
+#include "core.h"
 
-/* Relative name */
-int process_category(char *name)
+struct s_category categories[50];
+struct s_category *ptr_cat = categories;
+int categories_count = 0;
+
+extern struct s_config_site config_site;
+
+static struct s_category *add_category(char *dirname)
 {
-	/* Parse every file */
+	if (dirname == NULL)
+		return NULL;
 
-	return 0;
+	char name[strlen(dirname)];
+	strcpy(name, dirname+1);
+
+	strcpy(ptr_cat->name, name);
+	strcpy(ptr_cat->path, dirname);
+
+	// printf("Category %s added\n", ptr_cat->name, ptr_cat);
+
+	categories_count++;
+	return ptr_cat++;
+}
+
+int process_category(char *dirname)
+{
+	struct s_category *category;
+	char new_dir[PATH_MAX + 1];
+
+	category = add_category(dirname);
+	if (category == NULL)
+		return -1;
+
+	sprintf(new_dir, "%s/%s", config_site.dest_directory, category->name);
+
+	if (create_dir(new_dir) < 0) {
+		return -1;
+	}
+	else {
+		/* Category is created, now we can dig into it */
+		return process_dir(dirname, category);
+	}
 }

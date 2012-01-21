@@ -23,7 +23,7 @@ $(EXEC): $(OBJ)
 
 sundown:
 	make -C tanoku-sundown-3c32220
-	cp tanoku-sundown-3c32220/libsundown.so.1 $(BUILD_PATH)
+	cp tanoku-sundown-3c32220/libsundown.so* $(BUILD_PATH)
 
 ctemplate:
 	make -C ctemplate-1.0
@@ -32,3 +32,4 @@ clean:
 	-@(rm -f $(EXEC) $(OBJ))
 	make -C tanoku-sundown-3c32220 clean
 	make -C ctemplate-1.0 clean
+	rm $(BUILD_PATH)/libsundown*

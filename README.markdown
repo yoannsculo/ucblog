@@ -1,14 +1,18 @@
-
+ucblog
+================================
+ucblog is a c based static website generator.
 
 Using :
 
  - sundown	: https://github.com/tanoku/sundown
  - libctemplate : http://libctemplate.sourceforge.net (GPLV3)
 
+The project is in progress and subject to big changes. Full documentation will follow, as soon as I get something fully working.
+
+
+Other :
  - libhtmltpl	: http://pavluk.org/projects/libcgic/libhtmltpl/index.html
-
-nftw
-
+ - nftw
 
 layout :
 
@@ -33,7 +37,4 @@ i.e.
 <tmpl_var name="content_main">
 
 	<tmpl_var name="content_blog">
-
-
-1) 
 

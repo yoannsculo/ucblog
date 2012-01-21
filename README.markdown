@@ -1,10 +1,10 @@
 µcblog
 ================================================================================
-`µcblog` is a C based static website generator. It is inspired by jekyll and
-growl and aims to be very simple to use, with very few dependencies.
-And because I'm an embedded engineer, it's meant to be used on embedded systems
-and for self-hosting. Just Linux and ucblog ! No other boring stuff to install
-like jekyll.
+`µcblog` is a C based static website generator. It is inspired by
+[jekyll](https://github.com/mojombo/jekyll) and [growl](https://github.com/xfire/growl)
+and aims to be very simple to use, with very few dependencies. And because I'm
+an embedded engineer, it's meant to be used on embedded systems and for self-hosting.
+Just Linux and ucblog ! No other boring stuff to install like jekyll.
 
 The project is in progress and subject to big changes. Full documentation will
 follow, as soon as I get something fully working.

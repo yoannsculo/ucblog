@@ -18,6 +18,9 @@ as possible for users.
 - Html templating - Using [libctemplate](http://libctemplate.sourceforge.net)
 and something like [liquid](https://github.com/Shopify/liquid) or [jinja2](http://jinja.pocoo.org/docs/)
 that doesn't exist in C yet.
+- HTML/CSS/JS rendering with [bootstrap](https://github.com/twitter/bootstrap) and
+[google-code-prettify](http://code.google.com/p/google-code-prettify/) to
+make your blog prettier ;) But you can use whatever HTML/CSS/JS you want.
 
 installation
 --------------------------------------------------------------------------------

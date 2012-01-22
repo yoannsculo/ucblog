@@ -31,11 +31,10 @@
 		</div>
 	</div>
 
-	<div>
-		<p>Site de <tmpl_var name="site_author"></p>
-		<p>----------------------------</p>
-	</div>
-
 	<tmpl_var name="content">
+
+	<footer>
+		<p><tmpl_var name="site_author"> 2012</p>
+	</footer>
 </body>
 </html>

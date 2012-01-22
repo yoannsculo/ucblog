@@ -1,6 +1,7 @@
-<h2>BLOG</h2>
-
-<tmpl_var name="content">
-
-oo
-
+<section id="content">
+	<div class="container">
+		<div class="well">
+			<tmpl_var name="content">
+		</div>
+	</div>
+</section>

@@ -99,6 +99,7 @@ int create_dir(const char *dirname)
 		if (is_dir(sub_dirname))
 			continue;
 		
+		printf("on veut créer %s\n", sub_dirname);
 		ret = mkdir(sub_dirname, S_IRWXU);
 		if (ret != 0) {
 			printf("Unable to create directory %s : %s\n", local_dirname, strerror(errno));
@@ -135,7 +136,7 @@ int check_dest_dir(char *path)
 	return create_dir(path);
 }
 
-static int get_extension(char *extension, char *string)
+int get_extension(char *extension, char *string)
 {
 	char *pstr = NULL;
 

@@ -21,10 +21,12 @@ static int process_mkd(char *filename, struct s_category *category)
 	struct s_page *page;
 	
 	page = add_page(filename, category);
-	if (page == NULL)
+	if (page == NULL) {
+		printf("Couldn't add page : %s\n", filename);
 		return -1;
-	else
+	} else {
 		return 0;
+	}
 }
 
 // Relative path
@@ -42,7 +44,7 @@ static int process_image(char *filename)
 	sprintf(dest, "%s/%s", config_site.dest_directory, dir);
 
 	if (cp_file(source, dest) == 0) {
-		printf("Processing IMG file : %s\n", filename);
+		// printf("Processing IMG file : %s\n", filename);
 		return 0;
 	} else {
 		return -1;
@@ -165,7 +167,14 @@ static int process_regular_file(char *filename)
 // Relative path
 static int process_dynamic_file(char *filename)
 {
-	// TODO : usefull ?
+	char source_file[PATH_MAX + 1];
+	char dest_file[PATH_MAX + 1];
+
+	sprintf(source_file, "%s/%s", config_site.source_directory, filename);
+	sprintf(dest_file, "%s/%s", config_site.dest_directory, filename+1);
+
+	// printf("dynamic found : %s\n", filename);
+	// cp_file(source_file, dest_file);
 	return 1;
 }
 

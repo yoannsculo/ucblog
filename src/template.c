@@ -149,7 +149,7 @@ int apply_template(struct s_page *page)
 	// 	return 1;
 
 	sprintf(filename, "%s/%s/content.html", config_site.dest_directory, page->permalink);
-	printf("on charge %s\n", filename);
+
 	if (!is_file(filename))
 		return -1;
 
@@ -158,7 +158,7 @@ int apply_template(struct s_page *page)
 		return -1;
 	}
 
-	printf("Processing HTML file : %s\n", filename);
+	// printf("Processing HTML file : %s\n", filename);
 
 	get_current_dir(filename, current_dir);
 	sprintf(temp_file, "%s/%s.html", current_dir, template);
@@ -171,7 +171,7 @@ int apply_template(struct s_page *page)
 		return -1;
 	}
 
-	sprintf(temp_file, "%s/index.html", current_dir);
+	sprintf(temp_file, "%s/%s.html", current_dir, page->filename);
 	fill_with_content(buffer, "default", temp_file);
 	free_buffer(&buffer);
 

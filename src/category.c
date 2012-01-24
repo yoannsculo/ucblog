@@ -15,6 +15,8 @@ extern struct s_config_site config_site;
 
 static struct s_category *add_category(char *dirname)
 {
+	char layout_file[PATH_MAX+1];
+
 	if (dirname == NULL)
 		return NULL;
 
@@ -24,7 +26,11 @@ static struct s_category *add_category(char *dirname)
 	strcpy(ptr_cat->name, name);
 	strcpy(ptr_cat->path, dirname);
 
-	// printf("Category %s added\n", ptr_cat->name, ptr_cat);
+	sprintf(layout_file, "%s/_layout/%s.layout", config_site.source_directory,
+						     ptr_cat->name);
+	/* Check if layout exists */
+	if (!is_file(layout_file))
+		return NULL;
 
 	categories_count++;
 	return ptr_cat++;
@@ -36,8 +42,11 @@ int process_category(char *dirname)
 	char new_dir[PATH_MAX + 1];
 
 	category = add_category(dirname);
-	if (category == NULL)
+	if (category == NULL) {
+		printf("Couldn't properly add category : %s\n", dirname);
 		return -1;
+	}
+
 
 	sprintf(new_dir, "%s/%s", config_site.dest_directory, category->name);
 

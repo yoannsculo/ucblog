@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
 	
-	<link href="<tmpl_var name="site_url">/assets/bootstrap/bootstrap-1.1.1.css" rel="stylesheet">
+	<link href="<tmpl_var name="site_url">/assets/bootstrap/bootstrap-1.4.0.css" rel="stylesheet">
 	<link href="<tmpl_var name="site_url">/assets/bootstrap/docs.css" rel="stylesheet">
 	<script src="<tmpl_var name="site_url">/assets/google-code-prettify/prettify.js"></script>
 	

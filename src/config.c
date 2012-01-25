@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "files.h"
 #include "config.h"
@@ -51,10 +52,13 @@ static int split_line(char *line, char *var, char *value)
 	strcpy(var, pch);
 
 	pch = strtok (NULL, "=");
-	if (pch == NULL)
-		return -1;
+	if (pch == NULL) {
+		/* filed empty but still set */
+		value[0] = '\0';
+	} else {
+		strcpy(value, pch);
+	}
 
-	strcpy(value, pch);
 	
 	return 0;
 }
@@ -78,11 +82,29 @@ int load_site_config()
 		char var[255];
 		char value[255];
 		
+		/* avoid comments */
+		if (line[0] == '#')
+			continue;
+
 		if (split_line(line, var, value) != 0)
 			continue;
-		
+
 		strcpy(config_site.var[i].var, var);
-		strcpy(config_site.var[i].value, value);
+
+		/* If this variable is empty we use config_site.dest_directory
+		 * as default value. This way it is faster to get a first try
+		 * of the software without setting/understanding this variable.
+		 */
+		if (strcmp(var, "site_url") == 0) {
+			char path[PATH_MAX+1];
+			char site_url[PATH_MAX+1];
+
+			getcwd(path, PATH_MAX);
+			sprintf(site_url, "%s/%s", path, config_site.dest_directory);
+			strcpy(config_site.var[i].value, site_url);
+		} else {
+			strcpy(config_site.var[i].value, value);
+		}
 		i++;
 	}
 

@@ -52,3 +52,8 @@ Licensed under the terms of the [GPL License](http://www.gnu.org/licenses/gpl.ht
 
 Other :
  - libhtmltpl	: http://pavluk.org/projects/libcgic/libhtmltpl/index.html
+
+Contact
+-------
+
+Yoann Sculo - <yoann.sculo@gmail.com>
